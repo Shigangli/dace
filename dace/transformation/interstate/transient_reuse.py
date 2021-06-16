@@ -1,4 +1,4 @@
-# Copyright 2019-2020 ETH Zurich and the DaCe authors. All rights reserved.
+# Copyright 2019-2021 ETH Zurich and the DaCe authors. All rights reserved.
 from dace import registry, sdfg as sd
 from dace.sdfg import nodes
 from dace.transformation import transformation
@@ -58,13 +58,13 @@ class TransientReuse(transformation.Transformation):
                     G.add_edge(e.src, e.dst)
 
             # Collapse all mappings and their scopes into one node
-            scope_dict = state.scope_dict(node_to_children=True)
-            for n in scope_dict[None]:
+            scope_children = state.scope_children()
+            for n in scope_children[None]:
                 if isinstance(n, nodes.EntryNode):
                     G.add_edges_from([
                         (n, x) for (y, x) in G.out_edges(state.exit_node(n))
                     ])
-                    G.remove_nodes_from(scope_dict[n])
+                    G.remove_nodes_from(scope_children[n])
 
             # Remove all nodes that are not AccessNodes or have incoming wcr edges
             # and connect their predecessors and successors

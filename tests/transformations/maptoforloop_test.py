@@ -1,4 +1,4 @@
-# Copyright 2019-2020 ETH Zurich and the DaCe authors. All rights reserved.
+# Copyright 2019-2021 ETH Zurich and the DaCe authors. All rights reserved.
 """ A test for the MapToForLoop transformation. """
 
 import dace
@@ -24,7 +24,7 @@ def test_map2for_overlap():
         expected[:, :, k + 1] = expected[:, :, k] + expected[:, :, k - 1]
 
     sdfg = map2for.to_sdfg()
-    sdfg.apply_transformations([MapExpansion, MapToForLoop])
+    assert sdfg.apply_transformations([MapExpansion, MapToForLoop]) == 2
     sdfg(A=A)
     assert np.allclose(A, expected)
 
